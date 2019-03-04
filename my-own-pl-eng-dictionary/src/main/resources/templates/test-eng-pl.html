@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	
+<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" th:href="@{../css/style.css}">
+
+<title>Test Yourself</title>
+</head>
+<body>
+	<div class="container">
+		<nav class="navbar navbar-dark bg-primary flex-column flex-md-row bd-navbar col-md-12" style="margin-bottom: 20px">
+			<div class="container-fluid">			
+				<div class="navbar-header">
+					<a class="navbar-brand" style="color: #fff">My Own Dictionary</a>
+				</div>
+				<ul class="nav navbar-nav flex-row mr-auto">
+					<li class="nav-item" style="margin-right: 15px">
+						<a class="nav-link active" th:href="@{/dictionary/addWord}">Home</a>
+					</li>
+					<li class="nav-item" style="margin-right: 15px">
+						<a class="nav-link active" th:href="@{/dictionary/drawEngPol}">Test Yourself ENG-PL</a>
+					</li>
+					<li class="nav-item" style="margin-right: 15px">
+						<a class="nav-link active" th:href="@{/dictionary/drawPolEng}">Test Yourself PL-ENG</a>
+					</li>
+					<li class="nav-item" style="margin-right: 15px">
+						<a class="nav-link active" th:href="@{/dictionary/userStats}">User stats</a>
+					</li>
+					<div sec:authorize="hasRole('ROLE_ADMIN')">
+						<li class="nav-item" style="margin-right: 15px">
+							<a class="nav-link active" th:href="@{/users/list}">Users list</a>
+						</li>
+					</div>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<form action="#" th:action="@{/logout}" method="POST">
+							<input type="submit" class="btn btn-warning btn-sm" value="Sign up">
+						</form>
+					</li>
+				</ul>
+			</div>	
+		</nav>
+		<p class="h4 mb-4">Draw English word</p>
+		<div sec:authorize="hasRole('ROLE_USER')">
+			<div class="form-group">
+				<div class="col-md-6">
+					<input type="hidden" th:value="${dictionary.id}" th:name="dictionaryId">	
+					<input type="text" th:value="${dictionary.englishWord}" class="form-control mb-4">
+				</div>
+				<div class="row" style="padding-top: 10px">	
+					<div class="col-sm-3" style="padding-top: 5px">
+						<button onclick="myFunction()" class="btn btn-outline-primary btn-block btn-md">Show details</button>
+					</div>
+					<div class="col-sm-3" style="padding-top: 5px">
+						<a th:href="@{/dictionary/drawPolEng}" class="btn btn-outline-primary btn-block btn-md">PL-->ENG</a>
+					</div>
+				</div>	
+				<div class="col-md-6" style="padding-top: 10px">	
+					<div id="myDIV">
+						<input type="text" th:value="${dictionary.polishWord}" class="form-control mb-4">
+						<p th:text="${dictionary.expression}" class="mb-4" style="border-style: ridge;"/>
+					</div>	
+				</div>
+			</div>
+			<div class="row" style="padding-top: 10px">	
+				<div class="col-sm-3" style="padding-top: 5px">
+					<a th:href="@{/dictionary/statsSuccessEngPl(dictionaryId=${dictionary.id})}" class="btn btn-success btn-block btn-md">I guessed it</a>
+				</div>
+				<div class="col-sm-3" style="padding-top: 5px">
+					<a th:href="@{/dictionary/statsWrongEngPl(dictionaryId=${dictionary.id})}" class="btn btn-danger btn-block btn-md">I got it wrong</a>
+				</div>
+			</div>		
+		</div>
+		<div sec:authorize="hasRole('ROLE_ADMIN')">
+			<div class="form-group">
+				<div class="col-md-6">
+					<input type="hidden" th:value="${adminDictionary.id}">	
+					<input type="text" th:value="${adminDictionary.englishWord}" class="form-control mb-4">
+				</div>
+				<div class="row" style="padding-top: 10px">	
+					<div class="col-sm-3" style="padding-top: 5px">
+						<button onclick="myFunction()" class="btn btn-outline-primary btn-block btn-md">Show details</button>
+					</div>
+					<div class="col-sm-3" style="padding-top: 5px">
+						<a th:href="@{/dictionary/drawPolEng}" class="btn btn-outline-primary btn-block btn-md">PL-->ENG</a>
+					</div>
+				</div>	
+				<div class="col-md-6" style="padding-top: 10px">	
+					<div id="myDIV">
+						<input type="text" th:value="${adminDictionary.polishWord}" class="form-control mb-4">
+						<p th:text="${adminDictionary.expression}" class="mb-4" style="border-style: ridge;"/>
+					</div>	
+				</div>
+			</div>
+			<div class="row" style="padding-top: 10px">	
+				<div class="col-sm-3" style="padding-top: 5px">
+					<a th:href="@{/dictionary/drawEngPol}" class="btn btn-success btn-block btn-md">I guessed it</a>
+				</div>
+				<div class="col-sm-3" style="padding-top: 5px">
+					<a th:href="@{/dictionary/drawEngPol}" class="btn btn-danger btn-block btn-md">I got it wrong</a>
+				</div>
+			</div>		
+		</div>
+	</div>	
+	
+	<script>
+	function myFunction() {
+	  var x = document.getElementById("myDIV");
+	  if (x.style.display === "none") {
+	    x.style.display = "block";
+	  } else {
+	    x.style.display = "none";
+	  }
+	}
+	</script>
+	
+</body>
+</html>	

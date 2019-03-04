@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- Reference Bootstrap files -->
+	<link rel="stylesheet"
+		 href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	
+	<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" th:href="@{../css/style.css}">
+<title>Registration Form</title>
+</head>
+<body>
+<div>
+	<section class="pt-5 pb-5 bg-primary inner-header">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<h1 class="mt-0 mb-3 text-white" style="font-style: italic;">My own dictionary</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div id="loginbox" style="margin-top: 50px;" class="mainbox col-md-3 col-md-offset-2 col-sm-6 col-sm-offset-2">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="panel-title">Registration form</div>
+			</div>
+		<div style="padding-top: 30px" class="panel-body">
+			<form action="#" th:action="@{/register/processRegistrationForm}" th:object="${appUser}" method="post">
+			<!-- Insert here messages or alerts if there are validated fields in your code -->
+			<div class="form-group">
+				<div class="col-xs-15">
+					<div>
+						<div th:if="${registrationError!=null}" class="alert alert-danger col-xs-offset-1 col-xs-10">
+							<p th:text=${registrationError}/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- First name -->
+			<div style="margin-bottom: 25px" class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+				<input class="form-control" type="text" placeholder="First name" th:field=*{firstName}>
+				<p th:errors="*{firstName}" class="error"/>
+			</div>
+			<!-- Last name -->
+			<div style="margin-bottom: 25px" class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+				<input class="form-control" type="text" placeholder="Last name" th:field=*{lastName}/>
+				<p th:errors="*{lastName}" class="error"/>
+			</div>
+			<!-- Email -->
+			<div style="margin-bottom: 25px" class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+				<input class="form-control" type="text" placeholder="Email" th:field=*{email}/>
+				<p th:errors="*{email}" class="error"/>
+			</div>
+			<!-- username -->
+			<div style="margin-bottom: 25px" class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+				<input class="form-control" type="text" placeholder="Username" th:field=*{username}/>
+				<p th:errors="*{username}" class="error"/>
+			</div>
+			<!-- password -->
+			<div style="margin-bottom: 25px" class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+				<input class="form-control" type="password" placeholder="Enter password" th:field=*{password}/>
+				<p th:errors="*{password}" class="error"/>
+			</div>
+			<!-- confirm password -->
+			<div style="margin-bottom: 25px" class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+				<input class="form-control" type="password" placeholder="Confirm password" th:field=*{matchingPassword}/>
+				<p th:errors="*{matchingPassword}" class="error"/>
+			</div>
+			<!-- Register button -->
+			<div style="margin-top: 10px" class="form-group">						
+				<div class="col-sm-6 controls">
+					<button type="submit" class="btn btn-primary btn-block">Register</button>
+				</div>
+			</div>	
+			<!-- Cancel button -->
+			<div style="margin-top: 10px" class="form-group">						
+				<div class="col-sm-6 controls">
+					<a type="button" th:href="@{../loginPage}" class="btn btn-danger btn-block">Cancel</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</div>
+</div>
+</body>
+</html>

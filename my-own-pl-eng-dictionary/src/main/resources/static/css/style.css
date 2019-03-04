@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+* {box-sizing: border-box;}
+
+.error{color: red} 
+
+.table .thead-dark th{
+	color: #fff;
+	background-color: #0D46FF;
+	vertical-align: middle;
+}
+
+#myDIV{
+	display: none;
+}

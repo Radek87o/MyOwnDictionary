@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	
+<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" th:href="@{../css/style.css}">
+
+<title>My Own Dictionary</title>
+</head>
+<body>
+	<div class="container">
+		<nav class="navbar navbar-dark bg-primary flex-column flex-md-row bd-navbar col-md-12" style="margin-bottom: 20px">
+			<div class="container-fluid">			
+				<div class="navbar-header">
+					<a class="navbar-brand" style="color: #fff">My Own Dictionary</a>
+				</div>
+				<ul class="nav navbar-nav flex-row mr-auto">
+					<li class="nav-item" style="margin-right: 15px">
+						<a class="nav-link active" th:href="@{/dictionary/addWord}">Home</a>
+					</li>
+					<li class="nav-item" style="margin-right: 15px">
+						<a class="nav-link active" th:href="@{/dictionary/drawEngPol}">Test Yourself ENG-PL</a>
+					</li>
+					<li class="nav-item" style="margin-right: 15px">
+						<a class="nav-link active" th:href="@{/dictionary/drawPolEng}">Test Yourself PL-ENG</a>
+					</li>
+					<li class="nav-item" style="margin-right: 15px">
+						<a class="nav-link active" th:href="@{/dictionary/userStats}">User stats</a>
+					</li>
+					<div sec:authorize="hasRole('ROLE_ADMIN')">
+						<li class="nav-item" style="margin-right: 15px">
+							<a class="nav-link active" th:href="@{/users/list}">Users list</a>
+						</li>
+					</div>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<form action="#" th:action="@{/logout}" method="POST">
+							<input type="submit" class="btn btn-warning btn-sm" value="Sign up">
+						</form>
+					</li>
+				</ul>
+			</div>	
+		</nav>
+		<p class="h4 mb-4">Add new word</p>
+		<form action="#" th:action="@{/dictionary/saveWord}" th:object="${dictionary}" method="post">
+			<div class="form-group">
+				<!-- alert displaying if user enter expression longer than 256 chars -->	
+				<div class="col-md-4">
+					<div>
+						<div th:if="${expressionInvalid}" class="alert alert-danger">
+							<p th:text="${expressionInvalid}"/>
+						</div>
+					</div>
+				</div>	
+				<!-- Add hidden form to handle update -->
+				<input type="hidden" th:field="*{id}"/>
+				
+				<input type="text" th:field="*{englishWord}" class="form-control mb-4 col-md-4" placeholder="Enter english word">	
+				<p class="alert alert-danger col-md-4" th:if="${#fields.hasErrors('englishWord')}" th:errors="*{englishWord}"></p>
+				<input type="text" th:field="*{polishWord}" class="form-control mb-4 col-md-4" placeholder="Enter polish word">
+				<p class="alert alert-danger col-md-4" th:if="${#fields.hasErrors('polishWord')}" th:errors="*{polishWord}"></p>
+				<textarea rows="4" cols="50" class="form-control mb-4 col-md-4" th:field="*{expression}" placeholder="Input expression (optional)"/>
+				<button type="submit" class="btn btn-success btn-block col-md-4">Save</button>
+				<a th:href="@{/dictionary/addWord}" class="btn btn-danger btn-block col-md-4">Cancel</a>
+			</div>
+		</form>
+		<div class="form-group">
+			<form action="#" th:action="@{/dictionary/searchWord}" method="get">	
+				<input type="text" th:name="theSearchName" placeholder="Enter word to search" class="form-control mb-4 col-md-2">
+				<input type="submit" th:value="Search" class="btn btn-outline-secondary col-md-2">
+			</form>
+		</div>
+		<div sec:authorize="hasRole('ROLE_USER')" style="margin-top: 30px">	
+			<table class="table table-bordered table-striped">
+				<thead class="bg-primary" style="color:#fff">
+					<tr>
+						<th style="width: 15%">English Word</th>
+						<th style="width: 15%">Polish Word</th>
+						<th style="width: 50%">Expression</th>
+						<th style="width: 15%">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="tempDictionary: ${userDictionary}">
+						<td th:text="${tempDictionary.englishWord}" style="width: 15%">
+						<td th:text="${tempDictionary.polishWord}" style="width: 15%">
+						<td th:text="${tempDictionary.expression}" style="width: 55%">
+						<td style="width: 15%">
+							<a th:href="@{/dictionary/updateWord(dictionaryId=${tempDictionary.id})}" class="btn btn-info btn-sm" style="margin-top:2px">Update</a>
+							<a th:href="@{/dictionary/deleteWord(dictionaryId=${tempDictionary.id})}" class="btn btn-danger btn-sm" style="margin-top:2px" onclick="if(!(confirm('Are you sure you want to delete this word?'))) return false;">Delete</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div sec:authorize="hasRole('ROLE_ADMIN')" style="margin-top: 30px">	
+			<table class="table table-bordered table-striped">
+				<thead class="bg-primary" style="color:#fff">
+					<tr>
+						<th style="width: 15%">English Word</th>
+						<th style="width: 15%">Polish Word</th>
+						<th style="width: 50%">Expression</th>
+						<th style="width: 15%">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="tempDictionary: ${fullDictionary}">
+						<td th:text="${tempDictionary.englishWord}" style="width: 15%">
+						<td th:text="${tempDictionary.polishWord}" style="width: 15%">
+						<td th:text="${tempDictionary.expression}" style="width: 55%">
+						<td style="width: 15%">
+							<a th:href="@{/dictionary/updateWord(dictionaryId=${tempDictionary.id})}" class="btn btn-info btn-sm" style="margin-top:2px">Update</a>
+							<a th:href="@{/dictionary/deleteWord(dictionaryId=${tempDictionary.id})}" class="btn btn-danger btn-sm" style="margin-top:2px" onclick="if(!(confirm('Are you sure you want to delete this word?'))) return false;">Delete</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>	
+	</div>
+</body>
+</html>
